@@ -13,7 +13,9 @@ function App() {
     dueDate: yup.string().required("La date est requise").matches(dateRegex, "Format invalide. Ex: JJ/mm/YYYY").test("isValidDate", "La date ne doit pas antérieure à aujourd’hui", (value) => {
         const [day, month, year] = value.split("/").map(Number);
         const inputDate = new Date(year, month - 1, day);
-        return inputDate >= new Date;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return inputDate >= today;
     }),
     isCompleted: yup.boolean()
   });

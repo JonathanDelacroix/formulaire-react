@@ -12,9 +12,11 @@ function App() {
   });
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
     ...prevData,
     [e.target.name]: e.target.value,
+    [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -28,12 +30,12 @@ function App() {
 
       <Form.Group className="mb-3" controlId="formName">
         <Form.Label>Nom</Form.Label>
-        <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter votre nom" />
+        <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter votre nom" required/>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formDate">
         <Form.Label>Date</Form.Label>
-        <Form.Control type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} />
+        <Form.Control type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} required/>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formPriority">

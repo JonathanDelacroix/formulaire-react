@@ -1,54 +1,52 @@
-import { useState } from 'react'
 import './App.css'
 import { Form, Button } from 'react-bootstrap'
+import { useForm } from "react-hook-form"
 
 function App() {
-
-  const [formData, setFormData] = useState({
-    name: "",
-    date: "",
-    priority: 'Basse',
-    isCompleted: false,
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    defaultValues: {
+      name: "",
+      dueDate: "",
+      priority: 'Basse',
+      isCompleted: false,
+    }
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-    ...prevData,
-    [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Formulaire soumis:', formData);
+  const onSubmit = (data) => {
+    console.log(data);
+    reset();
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-
-      <Form.Group className="mb-3" controlId="formName">
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form.Group className="mb-3" controlId="name">
         <Form.Label>Nom</Form.Label>
-        <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter votre nom" required/>
+        <Form.Control {...register("name", {required: "Le nom est requis"} )} isInvalid={!!errors.name} type="text" name="name" placeholder="Enter votre nom"/>
+        <Form.Control.Feedback type="invalid">
+            {errors.name?.message}
+        </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formDate">
+      <Form.Group className="mb-3" controlId="dueDate">
         <Form.Label>Date</Form.Label>
-        <Form.Control type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} required/>
+        <Form.Control {...register("dueDate", {required: "La date est requise"})} type="date" name="dueDate" isInvalid={!!errors.dueDate}/>
+        <Form.Control.Feedback type="invalid">
+            {errors.dueDate?.message}
+        </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formPriority">
+      <Form.Group className="mb-3" controlId="priority">
         <Form.Label>Priorité</Form.Label>
-        <Form.Select type="select" name="priority" value={formData.priority} onChange={handleChange}>
+        <Form.Select {...register("priority")} type="select" name="priority">
             <option value="Basse">Basse</option>
             <option value="Moyenne">Moyenne</option>
             <option value="Elevée">Elevée</option>
         </Form.Select>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formIsCompleted">
+      <Form.Group className="mb-3" controlId="isCompleted">
         <Form.Label>Terminé ?</Form.Label>
-        <Form.Check type="checkbox" name="isCompleted" checked={formData.isCompleted} onChange={handleChange} />
+        <Form.Check {...register("isCompleted")} type="checkbox" name="isCompleted" />
       </Form.Group>
 
       <Button variant="primary" type="submit">
